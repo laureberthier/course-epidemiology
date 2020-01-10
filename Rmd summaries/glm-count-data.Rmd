@@ -1,0 +1,73 @@
+---
+title: "GLM for count data"
+author: "Laure"
+date: "8 jan 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Count Data
+
+## Count Data
+
+Counts are non negative integers. Count data, in which there is no upper limit to the number of counts, usually fall into two types 
+
+- rates counts per unit of time/area/distance, etc 
+
+- contingency tables counts cross-classiﬁed by categorical variables
+
+We will see that both of these types of count data can be modelled using Poisson glms with a log link.
+
+
+## Poisson process
+
+Often counts are based on events that may be assumed to arise from a Poisson process, if
+
+- counts are observed over ﬁxed time interval
+
+- probability of the event approximately proportional to length of time for small intervals of time
+
+- for small intervals of time probability of > 1 event is neglibile compared to probability of one event i.e. two events cannot occur at the same time
+
+- numbers of events in non-overlapping time intervals are independent
+
+- the average rate at which events occur is constant
+
+Examples include number of death from lung cancer in a given year in France. 
+
+Let us consider the discrete random variables $Y_i$, the number of events occuring in a fixed period of time, then $Y$ will have the Poisson distribution 
+$$ P(Y_i = y_i) = \frac{\lambda^{y_i} e^{-\lambda} }{y_i!}$$
+where $e$ is the Euler number $e = 2.71828...$ and the real positive number $\lambda$ is equal to the expected value and the variance of $X$.
+
+## Rate Data 
+
+In many cases we are making comparisons across observation units $i = 1,...,n$ with diﬀerent levels of exposure to the event and hence the measure of interest is the rate of occurrence, e.g. number of death lung cancer in city $i$ in a given year in France. 
+
+## Models for count data 
+
+* If same exposure for all units 
+
+$$Y_i ∼ Poisson(\lambda_i) $$
+$$ E(Y_i) = \lambda_i, \hspace{1.5cm} V(Y_i) = \lambda_i $$
+so the variance function is 
+$$ V(\mu_i) = \mu_i $$
+and since the link function needs to map (0,$\infty$) to ($-\infty$,$\infty$), a natural choice for it is 
+$$ g(\mu_i) = log(\mu_i) $$
+The GLM is thus a Poisson GLM with log link function 
+$$log(\lambda_i) = \eta_i =  β_0 + β_1 x_{1i} + ... + β_p x_{pi}$$
+
+* If the exosure differs between units 
+
+Let us denote by $t_i$ the exposure of unit $i$, then a suitable model is
+$$log(\lambda_i/t_i) = \eta_i =  β_0 + β_1 x_{1i} + ... + β_p x_{pi}$$
+which is equivalent to 
+$$log(\lambda_i) =  log(t_i) + β_0 + β_1 x_{1i} + ... + β_p x_{pi}$$
+where $log(t_i)$ can be understood as an offset. The standardizing term $log(t_i)$ is an example of an oﬀset: a term with a ﬁxed coeﬃcient of 1. Oﬀsets are easily speciﬁed to GLM, either using the offset argument or using the offset function in the formula, e.g. offset(time).
+
+# Implementation in R 
+```{r, echo = T,warning= T}
+```

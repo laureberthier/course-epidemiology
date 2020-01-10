@@ -1,0 +1,110 @@
+---
+title: "Generalized Linear Models"
+author: "Laure"
+date: "8 jan 2020"
+output: html_document
+---
+
+# Generalized Linear Model 
+
+In statistics, the generalized linear model (GLM) is a flexible generalization of the ordinary linear framework that allows for response variables that are not normally distributed. 
+
+GLMs are most commonly used to model binary or count data, we will see how.   
+
+## The general linear model  
+
+In a general linear model
+$$ y_i = β_0 + β_1 x_{1i} + ... + β_p x_{pi} + \epsilon_i$$
+the response $y_i$,$i = 1,...,n$ is modelled by a linear function of explanatory variables $x_j$,$j = 1,...,p$ plus an error term.
+
+Here general refers to the dependence on potentially more than one explanatory variable, v.s. the simple linear model: 
+$$ y_i = β_0 + β_1 x_i + \epsilon_i$$
+Note that the linear refers to the linearity in the parameters and not in the explanatory variables. 
+
+The errors $\epsilon_i$ are assumed to be independent and identically distributed such that
+$E[\epsilon_i] = 0$ and $var[\epsilon_i] = σ^2$. Typically we assume $\epsilon_i ∼ N(0,σ^2)$. 
+
+Although a very useful framework, there are some situations where general linear models are not appropriate
+
+- the range of Y is restricted (e.g. binary, count)
+
+- the variance of Y depends on the mean
+
+Generalized linear models extend the general linear model framework to address both of these issues.
+
+## Generalized linear models 
+
+A generalized linear model is made up of a linear predictor
+$$ η_i = β_0 + β_1 x_{1i} + ... + β_p x_{pi}$$
+and two functions
+
+- a link function $g$ that describes how the mean, $E(Y_i) = µ_i$, depends on the linear predictor $g(µ_i) = η_i$ 
+
+- a variance function $V$ that describes how the variance, $var(Y_i)$ depends on the mean $var(Y_i) = φ V(µ_i)$ where the dispersion parameter $φ$ is a constant
+
+
+The general linear model is a special case of the generalized linear model with identity as the link function $g(\mu_i) = \mu_i$ and the variance function $V(\mu_i) = 1$ since $\epsilon_i ∼ N(0,σ^2)$. 
+
+Note transformations and GLMs are different things. In some situations a response variable can be transformed to improve linearity and homogeneity of variance so that a general linear model can be applied. This approach has some drawbacks
+
+- response variable has changed!
+
+- transformation must simulateneously improve linearity and homogeneity of variance
+
+- transformation may not be deﬁned on the boundaries of the sample space
+
+## Exponential family 
+
+Most of the commonly used statistical distributions, e.g. Normal, Binomial and Poisson, are members of the exponential family of distributions whose densities can be written in the form 
+$$ f(y;θ,φ) = exp(\frac{yθ−b(θ)}{φ + c(y,φ)})$$ where $φ$ is the dispersion parameter and $θ$ is the canonical parameter. It can be shown that
+$$ E(Y) = b'(θ) = µ $$ and 
+$$ var(Y) = φb''(θ) = φV(µ) $$
+
+For a GLM where the response follows an exponential distribution  we have 
+$$ g(µ_i) = g(b'(θ_i)) = \eta_i = β_0 + β_1 x_{1i} + ... + β_p x_{pi}$$
+The canonical link is deﬁned as
+$$ g = (b')^{−1} $$   which implies 
+$$ g(µ_i) = θ_i = β_0 + β_1 x_{1i} + ... + β_p x_{pi}$$ 
+Canonical links lead to desirable statistical properties of the GLM hence tend to be used by default. However there is no a priori reason why the systematic eﬀects in the model should be additive on the scale given by this link.
+
+## Estimation of the parameters 
+
+## in R
+
+Generalized linear models can be ﬁtted in R using the glm function, which is similar to the lm function for ﬁtting linear models. The arguments to a glm call are as follows
+$$ \text{glm(formula, family = gaussian, data, weights, subset, na.action, start = NULL, etastart, mustart, offset, control = glm.control(...), model = TRUE, method = ”glm.ﬁt”, x = FALSE, y = TRUE, contrasts = NULL, ...)}$$
+The family argument takes (the name of) a family function which speciﬁes
+
+- the link function 
+
+- the variance function 
+
+- various related objects used by glm, e.g. linkinv
+
+The exponential family functions available in R are
+
+- binomial(link = "logit") 
+
+- gaussian(link = "identity")
+
+- Gamma(link = "inverse")
+
+- inverse.gaussian(link = "1/mu2") 
+
+- poisson(link = "log")
+
+The glm function returns an object of class c("glm", "lm"). There are several glm or lm methods available for accessing/displaying components of the glm object, including: 
+
+- residuals() 
+
+- fitted() 
+
+- predict() 
+
+- coef() 
+
+- deviance()
+
+- formula() 
+
+- summary()
